@@ -2,6 +2,7 @@
 
 // load modules
 const express = require('express');
+const cors = require("cors");
 const morgan = require('morgan');
 const usersRouter = require('./routes/users');
 const coursesRouter = require('./routes/courses');
@@ -12,6 +13,13 @@ const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'tr
 // create the Express app
 const app = express();
 
+// Enable CORS for all routes
+app.use(cors());
+
+// React client origin:
+app.use(cors({
+  origin: "http://localhost:5173"
+}));
 
 //enables express to parse JSON
 app.use(express.json());
@@ -28,6 +36,11 @@ app.get('/', (req, res) => {
   res.json({
     message: 'Welcome to the REST API project!',
   });
+});
+
+// setup route for CORS
+app.get("/", (req, res) => {
+  res.json({ message: "CORS is working!" });
 });
 
 // send 404 if no other route matched

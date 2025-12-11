@@ -12,6 +12,7 @@ h2 {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
+    
 }
 p {
     font-weight: 300;
@@ -22,6 +23,7 @@ p {
 a {
     color: #939;
     text-decoration: none;
+    
 }
 .wrap {
     max-width: 1250px;
@@ -61,6 +63,7 @@ header nav a:hover {
     display: inline-block;
     margin-left: .5rem;
 }
+
 .course--module {
     background: #7c689b;
     border-radius: .5rem;
@@ -143,6 +146,7 @@ header nav a:hover {
     max-width: 510px;
     margin: 0 auto;
     padding: 0 1rem;
+    
 }
 form {
     margin-bottom: 2.5rem;
