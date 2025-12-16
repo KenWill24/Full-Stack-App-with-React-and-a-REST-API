@@ -1,45 +1,4 @@
-import { createContext, useState } from "react"
+import { createContext } from "react";
 
 // Create the context
-export const AuthContext = createContext()
-
-// Provider component
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-
-  // Sign in method
-  const signIn = async (email, password) => {
-  try {
-    const response = await fetch("http://localhost:5000/api/users", {
-      method: "GET",
-      headers: {
-        "Authorization": "Basic " + btoa(`${email}:${password}`)
-      }
-    })
-
-      if (response.ok) {
-        const data = await response.json()
-        // store user data in state
-        setUser({ ...data, email, password }) 
-        return true
-      } else {
-        return false
-      }
-    } catch (error) {
-      console.error("Sign in failed:", error)
-      return false
-    }
-  }
-
-  // Sign out method
-  const signOut = () => {
-    // clears the authenticated user
-    setUser(null)
-  }
-
-  return (
-    <AuthContext.Provider value={{ user, setUser, signIn, signOut }}>
-      {children}
-    </AuthContext.Provider>
-  )
-}
+export const AuthContext = createContext(null);

@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
 import { AuthContext } from "../AuthContext";
+
 
 const CourseDetail = () => {
   const { id } = useParams();
@@ -15,7 +15,7 @@ const CourseDetail = () => {
     fetch(`http://localhost:5000/api/courses/${id}`)
       .then(res => res.json())
       .then(data => setCourse(data))
-      .catch(err => console.error("Error fetching course:", err));
+      .catch(() => setErrors("Error fetching course:"));
   }, [id]);
 
     const handleDelete = async () => {
@@ -32,7 +32,7 @@ const CourseDetail = () => {
       } else {
         setErrors("Failed to delete course")
       }
-    } catch (err) {
+    } catch {
       setErrors("Something went wrong")
     }
   }
@@ -44,6 +44,12 @@ const CourseDetail = () => {
         <>
           <h2>{course.title}</h2>
           <p>{course.description}</p>
+
+          <h2>Estimated Time</h2>
+          <p>{course.estimatedTime}</p>
+
+          <h2>Materials Needed</h2>
+          <p>{course.materialsNeeded}</p>
 
           {/* ✅ Only show if current user owns the course */}
           {user && user.id === course.userId && (

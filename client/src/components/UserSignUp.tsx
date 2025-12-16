@@ -31,6 +31,7 @@ const UserSignUp = () => {
     });
 
     if (response.status === 201) {
+      await signIn(email,password);
       navigate("/signin");
     }
 
@@ -63,7 +64,6 @@ const UserSignUp = () => {
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            required
           />
         </div>
 
@@ -73,7 +73,6 @@ const UserSignUp = () => {
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            required
           />
         </div>
 
@@ -83,7 +82,6 @@ const UserSignUp = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
         </div>
 
@@ -93,11 +91,17 @@ const UserSignUp = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
         </div>
 
         <button type="submit">Sign Up</button>
+        <button
+            type="button"
+            className="cancel"
+            onClick={() => navigate("/")}
+          >
+          Cancel
+        </button>
       </form>
 
 

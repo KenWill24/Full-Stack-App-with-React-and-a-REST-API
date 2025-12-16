@@ -25,10 +25,11 @@ function App() {
       <Route path="/signin" element={<UserSignIn />} />
       <Route path="/signup" element={<UserSignUp />} />
       {/* Auth-Protected Routes*/}
-      <Route element={<PrivateRoute />} />
+      <Route element={<PrivateRoute />} >
       <Route path="/courses/create" element={<CreateCourse />} />
       <Route path="/courses/:id/update" element={<UpdateCourse />} /> 
 
+      </Route>
      </Routes>
     </Router>
     </>

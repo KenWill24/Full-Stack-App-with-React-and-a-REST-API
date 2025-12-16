@@ -1,7 +1,7 @@
-import { useState, useEffect, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { AuthContext } from "../AuthContext";
-import ValidationErrors from "./ValidationErrors";
+import { useState, useEffect, useContext } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { AuthContext } from "../AuthContext"
+import ValidationErrors from "./ValidationErrors"
 
 const UpdateCourse = () => {
   const [title, setTitle] = useState("");
@@ -27,7 +27,7 @@ const UpdateCourse = () => {
         } else {
           setErrors(["Failed to load course details"]);
         }
-      } catch (err) {
+      } catch {
         setErrors(["Something went wrong loading the course"]);
       }
     };
@@ -67,8 +67,8 @@ const UpdateCourse = () => {
         const data = await res.json();
         setErrors([data.message || "Failed to update course"]);
       }
-    } catch (err) {
-      console.error("Update failed:", err);
+    } catch {
+      console.error("Update failed:");
       setErrors(["Something went wrong"]);
     }
   };
@@ -82,12 +82,12 @@ const UpdateCourse = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>Course Title</label>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} required />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
 
         <div>
           <label>Description</label>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
 
         <div>
@@ -101,6 +101,13 @@ const UpdateCourse = () => {
         </div>
 
         <button type="submit">Update Course</button>
+        <button
+            type="button"
+            className="cancel"
+            onClick={() => navigate("/")}
+          >
+          Cancel
+        </button>
       </form>
     </div>
   );

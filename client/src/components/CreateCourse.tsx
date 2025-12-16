@@ -61,7 +61,7 @@ const CreateCourse = () => {
       const payload = await res.json().catch(() => null)
       setErrors([(payload?.message) || `Request failed with status ${res.status}`])
     }
-  } catch (err) {
+  } catch {
     setErrors(["Network error. Please try again."])
   }
 }
@@ -80,7 +80,6 @@ const CreateCourse = () => {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            required
           />
         </div>
 
@@ -89,7 +88,6 @@ const CreateCourse = () => {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            required
           />
         </div>
 
@@ -111,6 +109,14 @@ const CreateCourse = () => {
         </div>
 
         <button type="submit">Create Course</button>
+         <button
+            type="button"
+            className="cancel"
+            onClick={() => navigate("/")}
+          >
+          Cancel
+        </button>
+        
       </form>
 
 

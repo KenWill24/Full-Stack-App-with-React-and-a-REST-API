@@ -46,6 +46,13 @@ const UserSignIn = () => {
         </div>
 
         <button type="submit">Sign In</button>
+        <button
+            type="button"
+            className="cancel"
+            onClick={() => navigate("/")}
+          >
+          Cancel
+        </button>
       </form>
 
       {errors && <p style={{ color: "red" }}>{errors}</p>}
