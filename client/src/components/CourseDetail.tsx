@@ -48,34 +48,61 @@ const CourseDetail = () => {
 
   // Render course details
   return (
-    <div>
-      {errors && <p style={{ color: "red" }}>{errors}</p>}
-      {course ? (
-        <>
-          <h2>{course.title}</h2>
-          <p>{course.description}</p>
+    <main> 
+      {/* Action buttons */} 
+      <div className="actions--bar"> 
+        <div className="wrap"> 
+          {user && user.id === course?.userId && ( 
+            <> 
+            <Link to={`/courses/${id}/update`} className="button">Update Course</Link>
+            <button className="button" onClick={handleDelete}>Delete Course</button> 
+          </> 
+        )} 
+        <Link to="/" className="button button-secondary">Return to List</Link> 
+       </div> 
+      </div> 
+      {/* Course content */} 
+     <div className="wrap"> 
+      <h2>Course Detail</h2> 
+      {errors.length > 0 && ( 
+        <p style={{ color: "red" }}>{errors.join(", ")}</p> 
+      )} 
+      {course ? ( 
+        <form> 
+          <div className="main--flex"> 
+            {/* Left column: title and description */}
+            <div> 
+              <h3 className="course--detail--title">Course</h3>
+              <h4 className="course--name">{course.title}</h4> 
+              <p>By {course.user?.firstName} {course.user?.lastName}</p> 
 
-          <h2>Estimated Time</h2>
-          <p>{course.estimatedTime}</p>
-
-          <h2>Materials Needed</h2>
-          <p>{course.materialsNeeded}</p>
-
-          {/* Only show if current user owns the course */}
-          {user && user.id === course.userId && (
-            <div className="course-actions">
-              <Link to={`/courses/${id}/update`} className="btn">Update Course</Link>
-              <button className="btn delete" onClick={handleDelete}>
-                Delete Course
-              </button>
+              {course.description 
+                .split("\n") 
+                .map((para, i) => <p key={i}>{para}</p>)} 
             </div>
-          )}
-        </>
-      ) : (
-        <p>Loading course...</p>
+            {/* Right column: time and materials */} 
+            <div> 
+              <h3 className="course--detail--title">Estimated Time</h3> 
+              <p>{course.estimatedTime}</p> 
+
+              <h3 className="course--detail--title">Materials Needed</h3> 
+              <ul className="course--detail--list"> 
+                {course.materialsNeeded 
+                  .split("*") 
+                  .map((item, i) => 
+                    item.trim() ? <li key={i}>{item.trim()}</li> : null
+                  )} 
+              </ul>
+            </div>
+          </div>
+        </form> 
+      ) : ( 
+        <p>Loading course...</p> 
       )}
-    </div>
-  )
-}
+    </div> 
+  </main>
+ ); 
+};
+
 
 export default CourseDetail

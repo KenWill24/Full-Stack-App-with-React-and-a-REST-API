@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   // Sign in method
   const signIn = async (email, password) => {
   try {
+    // Send GET request to API for users
     const response = await fetch("http://localhost:5000/api/users", {
       method: "GET",
       headers: {
