@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import { AuthContext } from "../AuthContext"
 import ValidationErrors from "./ValidationErrors"
 
+// Component for updating an existing course
 const UpdateCourse = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -10,10 +11,12 @@ const UpdateCourse = () => {
   const [materialsNeeded, setMaterialsNeeded] = useState("");
   const [errors, setErrors] = useState([]);
 
+  // Get course ID from URL params and user info from context
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // Fetch course data when component mounts
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -34,14 +37,17 @@ const UpdateCourse = () => {
     fetchCourse();
   }, [id]);
 
+  // Handle form submission to update the course
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Ensure user is signed in before submitting
     if (!user) {
       setErrors(["Not authorized. Please sign in."]);
       return;
     }
 
+    // Send PUT request to API to update course
     try {
       const res = await fetch(`http://localhost:5000/api/courses/${id}`, {
         method: "PUT",
@@ -73,44 +79,68 @@ const UpdateCourse = () => {
     }
   };
 
+  // Render the update course form
   return (
-    <div>
-      <h2>Update Course</h2>
+  <main> 
+    <div className="wrap">
+      <h2>Update Course</h2> 
 
       <ValidationErrors errors={errors} />
 
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Course Title</label>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} />
-        </div>
+        <div className="main--flex"> 
+          <div>
+            <label htmlFor="courseTitle">Course Title</label> 
+            <input 
+              id="courseTitle" 
+              name="courseTitle" 
+              type="text" 
+              value={title} 
+              onChange={(e) => setTitle(e.target.value)} 
+            /> 
+            <p>By {user?.firstName} {user?.lastName}</p>
 
-        <div>
-          <label>Description</label>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
-        </div>
+            <label htmlFor="courseDescription">Course Description</label> 
+            <textarea 
+              id="courseDescription"
+              name="courseDescription" 
+              value={description} 
+              onChange={(e) => setDescription(e.target.value)}
+            /> 
+          </div> 
 
-        <div>
-          <label>Estimated Time</label>
-          <input value={estimatedTime} onChange={(e) => setEstimatedTime(e.target.value)} />
-        </div>
+          <div> 
+            <label htmlFor="estimatedTime">Estimated Time</label>
+            <input 
+              id="estimatedTime" 
+              name="estimatedTime" 
+              type="text" 
+              value={estimatedTime} 
+              onChange={(e) => setEstimatedTime(e.target.value)}
+            />
 
-        <div>
-          <label>Materials Needed</label>
-          <textarea value={materialsNeeded} onChange={(e) => setMaterialsNeeded(e.target.value)} />
-        </div>
+            <label htmlFor="materialsNeeded">Materials Needed</label>
+            <textarea 
+              id="materialsNeeded" 
+              name="materialsNeeded" 
+              value={materialsNeeded} 
+              onChange={(e) => setMaterialsNeeded(e.target.value)} 
+             /> 
+           </div> 
+          </div> 
 
-        <button type="submit">Update Course</button>
-        <button
-            type="button"
-            className="cancel"
+          <button className="button" type="submit">Update Course</button>
+          <button 
+            className="button button-secondary" 
+            type="button" 
             onClick={() => navigate("/")}
-          >
-          Cancel
-        </button>
-      </form>
-    </div>
-  );
-};
+          > 
+            Cancel 
+          </button> 
+         </form> 
+        </div> 
+       </main> 
+     ); 
+    };
 
 export default UpdateCourse;

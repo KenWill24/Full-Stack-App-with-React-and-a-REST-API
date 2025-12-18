@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 
+// Component for protecting routes that require authentication
 const PrivateRoute = () => {
   const { user } = useContext(AuthContext);
 

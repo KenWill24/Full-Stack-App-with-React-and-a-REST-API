@@ -1,29 +1,35 @@
-import { useContext } from "react"
-import { Link } from "react-router-dom"
-import { AuthContext } from "../AuthContext"
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../AuthContext";
 
+// Component for header
 const Header = () => {
-  const { user, signOut } = useContext(AuthContext)
+  const { user, signOut } = useContext(AuthContext);
 
   return (
-    <header>
-      <h1>School Database App</h1>
+    <header className="header--flex">
+      <div className="header--logo">
+        <Link to="/">Courses</Link>
+      </div>
       <nav>
-        <Link to="/">Courses</Link>{" "}
-        {user ? (
-          <>
-            <span>Welcome, {user.firstName} {user.lastName}</span>{" "}
-            <button onClick={signOut}>Sign Out</button>
-          </>
-        ) : (
-          <>
-            <Link to="/signin">Sign In</Link>{" "}
-            <Link to="/signup">Sign Up</Link>
-          </>
-        )}
+        <ul className={user ? "header--signedin" : "header--signedout"}>
+          {user ? (
+            <>
+              <li>Welcome, {user.firstName} {user.lastName}</li>
+              <li>
+                <button onClick={signOut}>Sign Out</button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li><Link to="/signup">Sign Up</Link></li>
+              <li><Link to="/signin">Sign In</Link></li>
+            </>
+          )}
+        </ul>
       </nav>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

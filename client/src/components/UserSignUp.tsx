@@ -2,8 +2,9 @@ import { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { AuthContext } from "../AuthContext"
 import ValidationErrors from "./ValidationErrors"
+import { Link } from "react-router-dom"
 
-
+// Component for registering a new user
 const UserSignUp = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -11,14 +12,16 @@ const UserSignUp = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
 
-
+  // Access signIn function from the authentication context
   const { signIn } = useContext(AuthContext)
   const navigate = useNavigate()
 
+  // Handle form submission to create a new user
   const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
+    // Send POST request to API to create a new user
     const response = await fetch("http://localhost:5000/api/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -51,61 +54,66 @@ const UserSignUp = () => {
   }
 };
 
+// Render the sign up form
   return (
-    <div>
+   <main>
+    <div className="form--centered">
       <h2>Sign Up</h2>
 
-        <ValidationErrors errors={errors} />
+      <ValidationErrors errors={errors} />
 
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>First Name</label>
-          <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-        </div>
+        <label htmlFor="firstName">First Name</label>
+        <input
+          id="firstName"
+          name="firstName"
+          type="text"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
 
-        <div>
-          <label>Last Name</label>
-          <input
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-        </div>
+        <label htmlFor="lastName">Last Name</label>
+        <input
+          id="lastName"
+          name="lastName"
+          type="text"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
 
-        <div>
-          <label>Email Address</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+        <label htmlFor="emailAddress">Email Address</label>
+        <input
+          id="emailAddress"
+          name="emailAddress"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+        <label htmlFor="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-        <button type="submit">Sign Up</button>
+        <button className="button" type="submit">Sign Up</button>
         <button
-            type="button"
-            className="cancel"
-            onClick={() => navigate("/")}
-          >
+          className="button button-secondary"
+          type="button"
+          onClick={() => navigate("/")}
+        >
           Cancel
         </button>
       </form>
-
-
-    </div>
+    <p>
+      Already have a user account? Click here to{" "}
+      <Link to="/signin">sign in</Link>!
+    </p>
+  </div>
+</main>
   )
 }
 

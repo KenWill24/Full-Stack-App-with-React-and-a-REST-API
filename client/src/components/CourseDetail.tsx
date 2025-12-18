@@ -2,15 +2,20 @@ import { useEffect, useState, useContext } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 
-
+// Component for displaying details of a single course
 const CourseDetail = () => {
+  // Get course ID from the URL
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [errors, setErrors] = useState([]);
 
+  // Access the currently signed in user from context
   const { user } = useContext(AuthContext);
+
+  // Hook for navigation -- used after deleting a course
   const navigate = useNavigate();
 
+  // Fetch course details when component mounts or when ID changes
   useEffect(() => {
     fetch(`http://localhost:5000/api/courses/${id}`)
       .then(res => res.json())
@@ -18,9 +23,13 @@ const CourseDetail = () => {
       .catch(() => setErrors("Error fetching course:"));
   }, [id]);
 
+  // Handle deleting the course
     const handleDelete = async () => {
+
+    // Only allow delete if user is signed in
     if (!user) return
     try {
+      // Send Delete request to API to delete course
       const res = await fetch(`http://localhost:5000/api/courses/${id}`, {
         method: "DELETE",
         headers: {
@@ -37,6 +46,7 @@ const CourseDetail = () => {
     }
   }
 
+  // Render course details
   return (
     <div>
       {errors && <p style={{ color: "red" }}>{errors}</p>}
@@ -51,7 +61,7 @@ const CourseDetail = () => {
           <h2>Materials Needed</h2>
           <p>{course.materialsNeeded}</p>
 
-          {/* ✅ Only show if current user owns the course */}
+          {/* Only show if current user owns the course */}
           {user && user.id === course.userId && (
             <div className="course-actions">
               <Link to={`/courses/${id}/update`} className="btn">Update Course</Link>
