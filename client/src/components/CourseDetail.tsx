@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
+import ReactMarkdown from "react-markdown";
 
 // Component for displaying details of a single course
 const CourseDetail = () => {
@@ -20,89 +21,102 @@ const CourseDetail = () => {
     fetch(`http://localhost:5000/api/courses/${id}`)
       .then(res => res.json())
       .then(data => setCourse(data))
-      .catch(() => setErrors("Error fetching course:"));
+      .catch(() => setErrors(["Error fetching course"]));
   }, [id]);
 
   // Handle deleting the course
-    const handleDelete = async () => {
+  const handleDelete = async () => {
+    if (!user) return;
 
-    // Only allow delete if user is signed in
-    if (!user) return
     try {
-      // Send Delete request to API to delete course
       const res = await fetch(`http://localhost:5000/api/courses/${id}`, {
         method: "DELETE",
         headers: {
-          "Authorization": "Basic " + btoa(`${user.email}:${user.password}`)
+          Authorization: "Basic " + btoa(`${user.email}:${user.password}`)
         }
-      })
+      });
+
       if (res.status === 204) {
-        navigate("/")   // redirect after delete
+        navigate("/");
       } else {
-        setErrors("Failed to delete course")
+        setErrors(["Failed to delete course"]);
       }
     } catch {
-      setErrors("Something went wrong")
+      setErrors(["Something went wrong"]);
     }
-  }
+  };
 
   // Render course details
   return (
-    <main> 
-      {/* Action buttons */} 
-      <div className="actions--bar"> 
-        <div className="wrap"> 
-          {user && user.id === course?.userId && ( 
-            <> 
-            <Link to={`/courses/${id}/update`} className="button">Update Course</Link>
-            <button className="button" onClick={handleDelete}>Delete Course</button> 
-          </> 
-        )} 
-        <Link to="/" className="button button-secondary">Return to List</Link> 
-       </div> 
-      </div> 
-      {/* Course content */} 
-     <div className="wrap"> 
-      <h2>Course Detail</h2> 
-      {errors.length > 0 && ( 
-        <p style={{ color: "red" }}>{errors.join(", ")}</p> 
-      )} 
-      {course ? ( 
-        <form> 
-          <div className="main--flex"> 
-            {/* Left column: title and description */}
-            <div> 
-              <h3 className="course--detail--title">Course</h3>
-              <h4 className="course--name">{course.title}</h4> 
-              <p>By {course.user?.firstName} {course.user?.lastName}</p> 
+    <main>
+      {/* Action buttons */}
+      <div className="actions--bar">
+        <div className="wrap">
+          {user && user.id === course?.userId && (
+            <>
+              <Link to={`/courses/${id}/update`} className="button">
+                Update Course
+              </Link>
+              <button className="button" onClick={handleDelete}>
+                Delete Course
+              </button>
+            </>
+          )}
+          <Link to="/" className="button button-secondary">
+            Return to List
+          </Link>
+        </div>
+      </div>
 
-              {course.description 
-                .split("\n") 
-                .map((para, i) => <p key={i}>{para}</p>)} 
-            </div>
-            {/* Right column: time and materials */} 
-            <div> 
-              <h3 className="course--detail--title">Estimated Time</h3> 
-              <p>{course.estimatedTime}</p> 
+      {/* Course content */}
+      <div className="wrap">
+        <h2>Course Detail</h2>
 
-              <h3 className="course--detail--title">Materials Needed</h3> 
-              <ul className="course--detail--list"> 
-                {course.materialsNeeded 
-                  .split("*") 
-                  .map((item, i) => 
-                    item.trim() ? <li key={i}>{item.trim()}</li> : null
-                  )} 
-              </ul>
+        {errors.length > 0 && (
+          <p style={{ color: "red" }}>{errors.join(", ")}</p>
+        )}
+
+        {course ? (
+          <form>
+            <div className="main--flex">
+              {/* Left column: title and description */}
+              <div>
+                <h3 className="course--detail--title">Course</h3>
+                <h4 className="course--name">{course.title}</h4>
+                <p>
+                  By {course.user?.firstName} {course.user?.lastName}
+                </p>
+
+                {/* Render description as Markdown */}
+                <ReactMarkdown>{course.description}</ReactMarkdown>
+              </div>
+
+              {/* Right column: time and materials */}
+              <div>
+                <h3 className="course--detail--title">Estimated Time</h3>
+                <p>{course.estimatedTime}</p>
+
+                <h3 className="course--detail--title">Materials Needed</h3>
+
+                {/* Render materials as Markdown */}
+                <ReactMarkdown
+                  components={{
+                    ul: ({ node, ...props }) => (
+                      <ul className="course--detail--list" {...props} />
+                    ),
+                  }}
+                >
+                  {course.materialsNeeded}
+                </ReactMarkdown>
+              </div>
             </div>
-          </div>
-        </form> 
-      ) : ( 
-        <p>Loading course...</p> 
-      )}
-    </div> 
-  </main>
- ); 
+          </form>
+        ) : (
+          <p>Loading course...</p>
+        )}
+      </div>
+    </main>
+  );
 };
 
-
-export default CourseDetail
+export default CourseDetail;
