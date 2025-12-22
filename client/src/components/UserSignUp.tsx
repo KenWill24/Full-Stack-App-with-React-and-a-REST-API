@@ -10,7 +10,7 @@ const UserSignUp = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<string[]>([]);
+  const [errors, setErrors] = useState([]);
 
   // Access signIn function from authentication context
   const { signIn } = useContext(AuthContext);
