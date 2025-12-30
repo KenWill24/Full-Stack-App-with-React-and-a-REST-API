@@ -28,23 +28,20 @@ router.get('/users', authenticateUser, async (req, res, next) => {
  * POST /api/users
  * Create a new user
  */
-router.post('/users', async (req, res, next) => {
+router.post("/users", async (req, res, next) => {
   try {
-    // Create user
     await User.create(req.body);
-    
-    // Set Location header
-    res.location('/');
     res.status(201).end();
   } catch (error) {
-    if (error.name === "SequelizeUniqueConstraintError") {
-      res.status(400).json({ message: 'Email address already exists.' });
-    } else if (error.name === "SequelizeValidationError") {
-      res.status(400).json({ message: error.errors.map(e => e.message) });
+    if (error.name === "SequelizeValidationError") {
+      // ✅ Extract all validation messages
+      const errors = error.errors.map(err => err.message);
+      res.status(400).json({ errors });
     } else {
-      next(error);
+      next(error); // Pass other errors to global handler
     }
   }
 });
+
 
 module.exports = router;

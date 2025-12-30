@@ -20,49 +20,52 @@ const UserSignUp = () => {
 
   // Handle form submission to create a new user
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      // Send POST request to API to create a new user
-      const response = await fetch("http://localhost:5000/api/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          emailAddress: email,
-          password,
-        }),
-      });
+  try {
+    const response = await fetch("http://localhost:5000/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        emailAddress: email,
+        password,
+      }),
+    });
 
-      // If user creation succeeds, automatically sign them in
-      if (response.status === 201) {
-        await signIn(email, password);
-        navigate("/signin");
-        return;
-      }
-
-      // Handle validation errors returned from the server
-      if (response.status === 400) {
-        const errData = await response.json();
-
-        // FIX: Always convert errors to an array
-        const errs = errData.errors;
-        setErrors(Array.isArray(errs) ? errs : [errs]);
-        return;
-      }
-
-      // Handle all other error responses
-      const errData = await response.json().catch(() => null);
-      setErrors([
-        errData?.message || "Failed to sign up",
-      ]);
-    } catch (err) {
-      // Network or unexpected error
-      console.error("Sign-up error:", err);
-      setErrors(["Something went wrong"]);
+    if (response.status === 201) {
+      await signIn(email, password);
+      navigate("/signin");
+      return;
     }
-  };
+
+    if (response.status === 400) {
+      const errData = await response.json();
+      const errs = errData.errors;
+
+      if (Array.isArray(errs)) {
+        setErrors(errs);
+      } else if (typeof errs === "string") {
+        setErrors([errs]);
+      } else if (errs && typeof errs === "object") {
+        setErrors(Object.values(errs).map(String));
+      } else {
+        setErrors(["Validation failed"]);
+      }
+
+      return;
+    }
+
+    const errData = await response.json().catch(() => null);
+    setErrors([errData?.message || "Failed to sign up"]);
+  } catch (err) {
+    console.error("Sign-up error:", err);
+    setErrors(["Something went wrong"]);
+  }
+};
+
+
 
   // Render the sign up form
   return (
